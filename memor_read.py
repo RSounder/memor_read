@@ -4,9 +4,13 @@ import pyttsx3
 import csv
 import requests
 import io
+import time
 
-url = "https://raw.githubusercontent.com/RSounder/memor_read/main/words.csv"
-download = requests.get(url).content
+#url = "https://raw.githubusercontent.com/RSounder/memor_read/main/words.csv"
+
+sheet_url = "https://docs.google.com/spreadsheets/d/1nJ0x1d1AVdZNGuPRykUgs9QqUsSVeeEERjGFl6l7Xww/export?format=csv&gid=240701129"
+
+download = requests.get(sheet_url).content
 
 engine = pyttsx3.init()
 startCount = input('Enter starting number: ')
@@ -24,7 +28,7 @@ with io.StringIO(download.decode('utf-8')) as csv_file:
             engine.setProperty('rate', 130) 
             engine.say(f'word count: {line_count}')
             syns = row[2].rstrip(',')
-            print(f'Word count: {line_count} => \nWord: {row[0]}\nMeaning: {row[1]}\nSynonyms: {syns}\n---------------\n')
+            print(f'Word count: {line_count} => \nWord: {row[0]}\nMeaning: {row[1]}\nUsage: {row[3]}\nSynonyms: {syns}\n---------------\n')
             engine.setProperty('rate', 127)
             engine.say(f'{row[0]}.')
             engine.say(f'{list(row[0])}.')
@@ -32,9 +36,12 @@ with io.StringIO(download.decode('utf-8')) as csv_file:
             for i in range(3):
                 engine.say(f'{row[0]}.')
                 engine.say(f'meaning. {row[1]}.')
+                engine.say(f'usage. {row[3]}.')
                 syns = row[2].split(',')
                 engine.say(f'synonyms. {syns}.')
+                time.sleep(2)
             line_count += 1
             engine.runAndWait()
+            time.sleep(5)
         else:
             line_count += 1
