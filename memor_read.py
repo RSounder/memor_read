@@ -1,11 +1,19 @@
+#code optimised for windowsOS as the modules used have issues with linuxOS
+
 import pyttsx3
 import csv
+import requests
+import io
+
+url = "https://raw.githubusercontent.com/RSounder/memor_read/main/words.csv"
+download = requests.get(url).content
 
 engine = pyttsx3.init()
 startCount = input('Enter starting number: ')
 stopCount = input('Enter stop number (total 763): ')
 
-with open('words.csv') as csv_file:
+#open('words.csv')
+with io.StringIO(download.decode('utf-8')) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     line_count = 0
     
